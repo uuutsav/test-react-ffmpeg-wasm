@@ -2,6 +2,8 @@ import { useRef, useState } from 'react'
 import './App.css'
 import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { toBlobURL, fetchFile } from '@ffmpeg/util';
+import coreURL from '@ffmpeg/core?url';
+import wasmURL from '@ffmpeg/core/wasm?url';
 
 function App() {
   const [upload, setUpload] = useState(false)
@@ -26,18 +28,21 @@ function App() {
       console.log("FFmpeg: ",type, message)
     });
 
+    
+    // await ffmpeg.load({
+    //   coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
+    //   wasmURL: await toBlobURL(
+    //     `${baseURL}/ffmpeg-core.wasm`,
+    //     "application/wasm"
+    //   ),
+    //   workerURL: await toBlobURL(
+    //     `${baseURL}/ffmpeg-core.worker.js`,
+    //     "text/javascript"
+    //   ),
+    // });
 
-    await ffmpeg.load({
-      coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
-      wasmURL: await toBlobURL(
-        `${baseURL}/ffmpeg-core.wasm`,
-        "application/wasm"
-      ),
-      workerURL: await toBlobURL(
-        `${baseURL}/ffmpeg-core.worker.js`,
-        "text/javascript"
-      ),
-    });
+    await ffmpeg.load({ coreURL, wasmURL });
+
     console.log("in load")
     setLoaded(true)
   }
@@ -82,7 +87,8 @@ function App() {
           <button onClick={transcode}>Transcode</button>
         </div>}
         {transcoded && <div>
-          <video src={output}></video>
+          <p>{output} </p>
+          <img src={output}></img>
         </div>}
       </div>
     </>
