@@ -13,6 +13,7 @@ function App() {
   const [output, setOutput] = useState(null)
 
   const ffmpegRef = useRef(new FFmpeg());
+  const progressRef = useRef();
 
   const onUpload = (event) => {
     setFile(event.target.files[0]);
@@ -25,8 +26,13 @@ function App() {
 
     ffmpeg.on("log", ({ type, message }) => {
       // if (messageRef.current) messageRef.current.innerHTML = messageRef.current.innerHTML + " >>> " + message;
-      console.log("FFmpeg: ",type, message)
+      // console.log("FFmpeg: ",type, message)
     });
+
+    ffmpeg.on("progress", ({ progress, time }) => {
+      console.log("Progress: ", progress)
+      progressRef.current.innerHTML = `${progress * 100} % (transcoded time: ${time / 1000000} s)`;
+    })
 
     
     // await ffmpeg.load({
@@ -85,6 +91,8 @@ function App() {
         {laoded && <div>
           <video src="input.mp4" width={480} controls></video>
           <button onClick={transcode}>Transcode</button>
+          <p>Progress</p>
+          <p ref={progressRef}></p>
         </div>}
         {transcoded && <div>
           <p>{output} </p>
