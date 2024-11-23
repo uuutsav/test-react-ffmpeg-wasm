@@ -89,7 +89,6 @@ function App() {
         <button onClick={load}>Load FFMPEG</button>
 
         {laoded && <div>
-          <video src="input.mp4" width={480} controls></video>
           <button onClick={transcode}>Transcode</button>
           <p>Progress</p>
           <p ref={progressRef}></p>
